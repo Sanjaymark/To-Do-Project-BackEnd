@@ -1,5 +1,6 @@
 import express from "express";
 import { Blog } from "../models/blogs.js";
+import { User } from "../models/users.js";
 
 const router = express.Router();
 
@@ -23,12 +24,14 @@ router.get("/all", async (req,res)=>{
 //Blogs of the user
 router.get("/user", async (req,res)=>{
     try {
-        const blogs = await Blog.find({ user: req.user.id}).populate("user","name email");
-        if(!blogs){
-            return res.status(400).send({ error: "Couldn't load document"});
-        }
-        res.status(200).send({message: "Successfully got data", data: blogs})
-    } catch (error) {
+        // Extract the user's ID from the authentication token
+        const userId = req.user._id;
+    
+        // Query the blogs associated with the user's ID
+        const userBlogs = await Blog.find({ user: userId });
+        
+        res.json(userBlogs);
+      }catch (error) {
         console.log(error);
         res.status(500).send({error: "Internal Server error"}); 
     }
@@ -37,13 +40,23 @@ router.get("/user", async (req,res)=>{
 // Add a new blog
 router.post("/add", async (req,res)=>{
     try {
-        const postDate =  new Date().toLocaleString();
-        const blog = await new Blog({...req.body, date: postDate, user: req.user_id}).save();
-        if(!blog){
-            return res.status(400).json({message: "Error Uploading Blog"});
+        const postDate = new Date().toLocaleString();
+    
+        // Use the user's ID from the authentication token
+        const userId = req.user._id;
+    
+        const blog = await new Blog({
+          ...req.body,
+          date: postDate,
+          user: userId, // Set the user's ID here
+        }).save();
+    
+        if (!blog) {
+          return res.status(400).json({ message: "Error Uploading Blog" });
         }
-        res.status(201).send({message: "Notes saved Successfully", data:blog});
-    } catch (error) {
+    
+        res.status(201).send({ message: "Blog saved Successfully", data: blog });
+      }catch (error) {
         console.log(error);
         res.status(500).send({error: "Internal Server error"});
     }
