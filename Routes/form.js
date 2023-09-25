@@ -52,6 +52,22 @@ router.get("/all", async (req, res) => {
   });
   
 
+
+// Get a specific product by ID
+router.get('/:id', async (req, res) => {
+  try {
+      const data = await Form.findById(req.params.id);
+      if (!data) {
+          return res.status(404).json({ message: 'Data not found' });
+      }
+      res.json(data);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+});
+
+
+
 //route to edit form data
 router.put("/edit/:id", async (req, res) => {
     try {
