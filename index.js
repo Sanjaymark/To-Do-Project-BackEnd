@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import {dbConnection} from "./db.js";
 import {userRouter} from "./Routes/user.js"
-import { isAuthenticated } from "./Authentication/auth.js";
-import { formRouter } from "./Routes/form.js";
+import { taskRouter } from "./Routes/task.js";
+import { adminRouter } from "./Routes/admin.js";
 
 
 //configure env
@@ -24,7 +24,8 @@ app.use(express.json());
 
 //Routes
 app.use("/user", userRouter);
-app.use("/form",isAuthenticated, formRouter);
+app.use("/admin", adminRouter)
+app.use("/task", taskRouter);
 
 //start Listening
 app.listen(PORT, ()=>console.log(`server started in localhost:${PORT}`));

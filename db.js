@@ -8,7 +8,7 @@ export function dbConnection()
         useUnifiedTopology: true,
     }
     try{
-        mongoose.connect("mongodb+srv://Sanjay:Sr3125104@cluster0.qc7mipk.mongodb.net/FormProject", params);
+        mongoose.connect(process.env.CONNECTION_URL, params);
         console.log("Database connected Successfully")
     }catch(error)
     {

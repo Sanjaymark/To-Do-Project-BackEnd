@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/users.js";
 
-export const isAuthenticated = async (req,res, next) =>{
+
+
+export const isUser = async (req,res, next) =>{
     let token;
 
     if(req.headers){
@@ -22,3 +24,6 @@ export const isAuthenticated = async (req,res, next) =>{
         return res.status(400).send({ message: "Access Denied"});
     }
 }
+
+
+
